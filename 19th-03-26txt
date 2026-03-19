@@ -1,0 +1,67 @@
+19-03-2026(Thrusday)
+--------------------
+>What is Api gateways
+
+  >>An API Gateway is like a single entry point for all client requests to your backend services.
+  Instead of clients directly calling multiple microservices, they send requests to the API Gateway, and it handles everything behind the scenes.
+  Api server does is...
+  Request routing
+
+Authentication & authorization ,Load balancing,Rate limiting, Request/response transformation,API aggregation,Logging & monitoring,Caching,SSL termination,Protocol translation.
+
+
+>What is Gateway Api
+
+  >>Gateway API (Kubernetes)
+  Gateway API is a Kubernetes standard used to manage network traffic routing into and within a cluster.
+  Gateway API is a Kubernetes resource model for defining how external traffic enters and is routed inside a cluster.
+  Gateway API is a collection of Kubernetes API resources used for managing traffic routing and networking in a cluster.
+  It provides advanced traffic routing + infrastructure provisioning
+  It is an extensible, role-oriented, and protocol-aware system
+  
+>What is the difference between Api gateway and Gateway APi
+
+  >>The main difference between API Gateway and Gateway API is that API Gateway is an actual running service that processes and forwards requests, 
+  whereas Gateway API is a Kubernetes configuration model used to define how traffic routing should be handled. API Gateway works in general microservices architectures, 
+  while Gateway API is specifically designed for Kubernetes environments.
+  API Gateway Workflow
+Client sends request to API Gateway
+API Gateway receives the request
+Performs authentication and security checks
+Applies rate limiting / logging if needed
+Routes request to the appropriate microservice
+Microservice processes the request
+Response is sent back to API Gateway
+API Gateway may modify/aggregate response
+Final response is sent to the client
+
+🔹 Gateway API Workflow (Kubernetes)
+Define GatewayClass, Gateway, and Routes (HTTPRoute) in Kubernetes
+Gateway controller (like HAProxy/NGINX) reads these configurations
+Client sends request to the Gateway
+Gateway receives the request
+Gateway checks Route rules
+Routes request to the correct Kubernetes Service
+Service forwards request to the Pod
+Pod processes the request
+Response flows back → Gateway → Client
+  
+>What is HTTP route
+  >>HTTPRoute is a Kubernetes Gateway API resource that defines how HTTP/HTTPS traffic should be routed to backend services.
+  HTTPRoute mainly specifies:
+Path-based routing (e.g., /api, /login)
+Header-based routing
+Which service to forward traffic to
+  >>HTTPRoute defines routing rules for HTTP traffic in Kubernetes Gateway API.
+  
+>If your application deployed in a cluster, using service type ClusterIP how can you expose the application to the internet
+
+  #Note-API is a communication interface, while REST API is a standardized way of building APIs using HTTP.
+
+
+
+
+
+  -------
+  KGateway
+  
