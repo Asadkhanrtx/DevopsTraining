@@ -59,9 +59,27 @@ Which service to forward traffic to
   #Note-API is a communication interface, while REST API is a standardized way of building APIs using HTTP.
 
 
+Ingress:
+Ingress is a Kubernetes resource used to expose HTTP/HTTPS services from outside the cluster.
+Ingress = rules to route external traffic to internal services
+Ingress is a Kubernetes API object that defines how external HTTP/HTTPS traffic is routed to services inside a cluster.
+It works together with an Ingress Controller (like NGINX, Traefik, HAProxy) that actually handles the traffic. [gateway-ap...igs.k8s.io]
+
+
 
 
 
   -------
   KGateway
   
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: my-gateway
+spec:
+  gatewayClassName: nginx/kgateway...
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+
