@@ -1,0 +1,18 @@
+19-
+gave us 5 image for it we had to write the deployment file.(static app)
+service file
+and config file
+and then k gateway setup and 
+http routes then deploy it and see
+
+23
+gave us 3 repository having full stack project 
+made necesaarry changes like chnaging the service type
+created the gateway configuration
+one common for all three differnt applicaiton
+Then wrote Http routes for it
+and in the ha proxy pentioned everything configuration and was able too my app running
+retail-project
+fitnesss
+hospital manegemnt
+
