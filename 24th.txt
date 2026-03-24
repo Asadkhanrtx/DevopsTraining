@@ -1,0 +1,7 @@
+Kuberenetes Volumes
+>Empty Dir
+>Host path
+>static provisioning- shomeone has to provide DISK-where u store data
+>Dynamic provisioning
+location of log files-- cd /var/log/pods
+NFS-network file stsem(Network File System (NFS) is a distributed file system protocol that allows systems to share files over a network as if they were on local storage. )
