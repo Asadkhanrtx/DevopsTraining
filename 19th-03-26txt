@@ -63,6 +63,9 @@ Which service to forward traffic to
 
   -------
   KGateway
+what is kgateway
+workflow of the gateway api
+different components of gateway api what are their roles
   
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
