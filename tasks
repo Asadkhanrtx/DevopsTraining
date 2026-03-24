@@ -16,3 +16,8 @@ retail-project
 fitnesss
 hospital manegemnt
 
+24th
+configured volumes for the same 3 repositores 
+first emty dir
+then host path volumes
+and then tryied to get OOM error using shell scripting 
