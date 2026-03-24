@@ -1,7 +1,15 @@
 Kuberenetes Volumes
 >Empty Dir
+emptyDir is a temporary volume in Kubernetes that is created when a Pod starts and exists only for the lifetime of that Pod. It is commonly used for scratch space, caching, checkpointing intermediate results, or sharing files between containers within the same Pod. The volume starts empty and can be mounted by multiple containers, making it ideal for scenarios like one container downloading or generating data while another container consumes it. Data in an emptyDir persists across container restarts but is deleted permanently when the Pod is removed or rescheduled, so it is not suitable for persistent storage.
+
+It is commonly used as scratch space for temporary data (for example, storing intermediate files during a disk‑based merge sort), checkpointing long‑running computations where progress needs to survive container crashes but not Pod deletion, and sharing data between multiple containers in the same Pod (such as a content‑manager container downloading files into emptyDir while a webserver container serves those files). It can also be used for caching data or temporary logs, and when configured with medium: Memory, it provides fast in‑memory storage for sensitive or performance‑critical temporary data. 
+
 >Host path
+
 >static provisioning- shomeone has to provide DISK-where u store data
+PVs,PVC types of static provisioning
+
 >Dynamic provisioning
+
 location of log files-- cd /var/log/pods
 NFS-network file stsem(Network File System (NFS) is a distributed file system protocol that allows systems to share files over a network as if they were on local storage. )
