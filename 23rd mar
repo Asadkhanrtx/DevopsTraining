@@ -1,4 +1,4 @@
-
+what is ingress limitations of ingress
 Ingress:
 Ingress is a Kubernetes resource used to expose HTTP/HTTPS services from outside the cluster.
 Ingress = rules to route external traffic to internal services
@@ -7,3 +7,5 @@ It works together with an Ingress Controller (like NGINX, Traefik, HAProxy) that
 
 
 worked on gateway api created routes for difffernet microservice application having both pfront end backend
+  wrote gateway yaml file
+http routes etc..
