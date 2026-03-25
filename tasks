@@ -31,4 +31,4 @@ there we monted the path to persistentVolumeClaim
 
 same thing we did using dynamic provisioning
 created storage class
-pvc configuration
+pvc configuration (usind in-tree driver)
