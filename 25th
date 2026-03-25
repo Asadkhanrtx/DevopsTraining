@@ -1,0 +1,27 @@
+NFS
+An nfs volume allows an existing NFS (Network File System) share to be mounted into a Pod. Unlike emptyDir,
+which is erased when a Pod is removed, the contents of an nfs volume are preserved and the volume is merely unmounted.
+This means that an NFS volume can be pre-populated with data, and that data can be shared between pods. NFS can be mounted by multiple writers simultaneously.
+An NFS (Network File System) volume is a Kubernetes volume type that allows Pods to mount a directory from an external NFS server and use it as storage.
+
+The NFS server is a separate machine (or VM) that exports a directory
+Kubernetes Pods mount that directory over the network
+The data lives outside the Pod and outside the node
+volumes:
+  - name: nfs-volume
+    nfs:
+      server: 10.0.0.50
+      path: /nfs/shared-data
+      Without NFS:
+
+Each Pod has its own local storage
+Data is duplicated
+Hard to share state
+
+With NFS:
+
+One central storage location
+All Pods read/write the same directory
+Data persists even if Pods restart
+
+CSI driver
