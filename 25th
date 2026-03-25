@@ -51,7 +51,43 @@ Kubernetes needs storage
 Kubernetes calls the CSI driver
 CSI driver talks to the storage backend
 
+
 Cloud provider
 SAN / NAS
 NFS / Ceph / NetApp / EBS / Azure Disk
 Storage is created and mounted into the Pod
+
+>How pv will bind with the pvc what are the components will come together?
+
+When a PersistentVolumeClaim (PVC) is created, it represents a request for storage by a user or application. The API Server stores this PVC in etcd, and the PersistentVolume Controller (part of kube-controller-manager) continuously watches for new PVCs and available PersistentVolumes (PVs). The controller tries to find a matching PV based on storage size, access modes, and StorageClass. If a suitable PV exists, it binds the PV to the PVC; if not, and a StorageClass is specified, dynamic provisioning is triggered via a CSI driver, which creates new storage and a corresponding PV. Once bound, the PV and PVC are linked one‑to‑one.
+Key points:
+
+Binding is handled by the PV Controller
+Matching is based on size, access mode, and StorageClass
+Binding status changes to Bound for both PV and PVC
+
+>To bring the external storage inside the cluster called pv how this pv works insife the cluster?
+External storage (such as NFS, cloud disks, or SAN) is not physically moved into the Kubernetes cluster. Instead, Kubernetes creates a PersistentVolume (PV) object that acts as a logical representation of that external storage. The PV contains connection information (like server address, disk ID, or path) and storage properties, and this metadata is stored in etcd. The actual data remains on the external storage system. Inside the cluster, the PV works as an abstraction layer that allows Kubernetes to manage storage lifecycle independently of Pods, ensuring storage can persist even if Pods are recreated or rescheduled.
+Key points:
+
+PV is a logical abstraction, not physical storage
+PV metadata lives in etcd
+Actual data lives outside the cluster
+CSI drivers handle communication with external storage
+
+>How pvc will mount to the pod  and who is playing this role?
+
+When a Pod references a PVC in its manifest, the Scheduler first assigns the Pod to a suitable worker node. On that node, the kubelet takes responsibility for preparing the Pod, including mounting the storage. The kubelet checks the PV bound to the PVC and communicates with the CSI Node Plugin (via gRPC over a UNIX socket) to perform storage‑specific operations such as attaching, formatting, and mounting the volume at the node level. Once mounted on the node, kubelet makes the volume available inside the container at the specified mount path, and the Pod starts successfully.
+Key points:
+
+Pod → PVC → PV mapping is already done before mounting
+Scheduler selects the node
+kubelet performs the mount operation
+CSI Node Plugin handles storage‑specific logic
+
+
+If you’d like, I can also:
+
+Convert this into an interview‑ready answer
+Add a diagram flow
+Explain failure scenarios (Pending PVC, Mount errors)
