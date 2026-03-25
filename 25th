@@ -47,3 +47,11 @@ Mount/unmount volumes
 Resize volumes
 Take snapshots
 >>Kubernetes talks to any storage system via its CSI driver.
+Kubernetes needs storage
+Kubernetes calls the CSI driver
+CSI driver talks to the storage backend
+
+Cloud provider
+SAN / NAS
+NFS / Ceph / NetApp / EBS / Azure Disk
+Storage is created and mounted into the Pod
