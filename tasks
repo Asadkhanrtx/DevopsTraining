@@ -29,3 +29,6 @@ and in worker node i mapped the path to remote
  then we were given a task to create pv and pvc files for our fitness app application and retail project application for both mongo db and mysql
 there we monted the path to persistentVolumeClaim
 
+same thing we did using dynamic provisioning
+created storage class
+pvc configuration
