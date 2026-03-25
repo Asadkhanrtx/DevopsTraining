@@ -90,5 +90,8 @@ nfs server installation -client side nfs common and nfs server installed in new 
 learning about CSI
 pv and pvc
 whole working architecture
-created pv and pvc for the fitness tracker application and theRetail app.
+created pv and pvc for the fitness tracker application and theRetail app.(static)
+
+whole working architecture
+created storage class and pvc for the fitness tracker application and theRetail app.(Dynamic)
 
