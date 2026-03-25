@@ -21,3 +21,11 @@ configured volumes for the same 3 repositores
 first emty dir
 then host path volumes
 and then tryied to get OOM error using shell scripting 
+25th
+configured nfs server in a different instance 
+then in the client(worker node installed nfs common 
+then in the configuration file mention the ip address of worker node
+and in worker node i mapped the path to remote
+ then we were given a task to create pv and pvc files for our fitness app application and retail project application for both mongo db and mysql
+there we monted the path to persistentVolumeClaim
+
