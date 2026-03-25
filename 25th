@@ -25,3 +25,25 @@ All Pods read/write the same directory
 Data persists even if Pods restart
 
 CSI driver
+A CSI driver (Container Storage Interface driver) is a standardized plugin that allows Kubernetes to connect with external storage systems 
+(like cloud disks, network storage, or enterprise storage) in a consistent and portable way.
+Before CSI, Kubernetes had in‑tree volume plugins:
+
+Storage code was built inside Kubernetes
+Adding or updating storage support required Kubernetes releases
+Hard to maintain and extend
+
+🔹 CSI solves this by moving storage logic outside Kubernetes.
+A CSI driver is:
+
+Software provided by a storage vendor
+Runs outside the Kubernetes core
+Implements the CSI specification
+Allows Kubernetes to:
+
+Create volumes
+Attach/detach volumes
+Mount/unmount volumes
+Resize volumes
+Take snapshots
+>>Kubernetes talks to any storage system via its CSI driver.
