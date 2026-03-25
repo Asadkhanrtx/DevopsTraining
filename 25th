@@ -86,8 +86,9 @@ kubelet performs the mount operation
 CSI Node Plugin handles storage‑specific logic
 
 
-If you’d like, I can also:
+nfs server installation -client side nfs common and nfs server installed in new instance
+learning about CSI
+pv and pvc
+whole working architecture
+created pv and pvc for the fitness tracker application and theRetail app.
 
-Convert this into an interview‑ready answer
-Add a diagram flow
-Explain failure scenarios (Pending PVC, Mount errors)
