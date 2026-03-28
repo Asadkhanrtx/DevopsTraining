@@ -1,0 +1,56 @@
+StatefulSet
+A StatefulSet runs a group of Pods, and maintains a sticky identity for each of those Pods.
+This is useful for managing applications that need persistent storage or a stable, unique network identity.
+Manages the deployment and scaling of a set of Pods, and provides guarantees about the ordering and uniqueness of these Pods.
+
+Like a Deployment, a StatefulSet manages Pods that are based on an identical container spec. Unlike a Deployment,
+a StatefulSet maintains a sticky identity for each of its Pods. These pods are created from the same spec, but are not interchangeable: 
+each has a persistent identifier that it maintains across any rescheduling.
+
+If you want to use storage volumes to provide persistence for your workload, you can use a StatefulSet as part of the solution.
+Although individual Pods in a StatefulSet are susceptible to failure, the persistent Pod identifiers make it easier to match existing
+volumes to the new Pods that replace any that have failed.
+
+>Without cluster ip inside the cluster how we are going to communicate or distribute traffic to the pod?
+With a Headless Service, Kubernetes does NOT do load‑balancing.
+Instead, Kubernetes returns the Pod IPs via DNS, and the client chooses which Pod to talk to.
+
+before statefulset
+Client → Service ClusterIP → kube-proxy → Pod
+after stateful set
+Do not create a virtual IP, just expose Pod IPs via DNS
+Client → DNS → Pod IP (chosen by client)
+web-0.web.default.svc.cluster.local
+web-1.web.default.svc.cluster.local
+Without ClusterIP, Kubernetes uses DNS to expose individual Pod IPs, and traffic control moves from Kubernetes to the application itself.
+
+>What is Pod DNS? where we can find this DNS?
+Pod DNS is the DNS name assigned to a Pod so that:
+Other Pods
+Applications inside the cluster
+can find and talk to that Pod by name instead of IP.
+Kubernetes runs a DNS system inside the cluster (usually CoreDNS).
+Watches Pods and Services
+Automatically creates DNS records for them
+Answers DNS queries from Pods
+1️⃣ Inside the Pod (as configuration)
+cat /etc/resolv.conf
+Nameserver IP
+Search domains
+2️⃣ Inside Cluster DNS (CoreDNS)
+CoreDNS stores records like:
+Pod → IP
+Service → IP(s)
+
+Client Pod
+  ↓ DNS lookup
+CoreDNS
+  ↓ IP
+Client Pod
+  ↓ TCP connection
+Target Pod (mysql-0)
+
+>how HeadlessService related to the Statefulsut..what is the need of it?
+ StatefulSet needs HeadlessService to give each Pod a stable DNS identity
+Without a HeadlessService, StatefulSet cannot provide reliable networking.
+
