@@ -54,3 +54,120 @@ Target Pod (mysql-0)
  StatefulSet needs HeadlessService to give each Pod a stable DNS identity
 Without a HeadlessService, StatefulSet cannot provide reliable networking.
 
+binlog
+------
+Replication
+
+Primary writes changes
+Replicas read binlog and apply same changes
+Point‑in‑time recovery
+Restore DB to a specific moment
+Replay binlog after a backup
+Auditing / debugging
+See what data changed and when
+
+Probes
+-----
+>before routing traffic to a pod why do we need to check the health of the pod?
+
+>>What can go wrong without health checks?
+Imagine:
+Pod just started
+App still loading
+DB not connected
+Health checks ensure traffic is only routed to pods that are ready and functioning correctly, preventing errors and downtime.”
+types of health check
+readiness probe
+👉 Controls traffic routing
+If READY → traffic goes
+If NOT READY → no traffic
+
+2. Liveness Probe
+👉 Checks if app is alive
+If failed → restart container
+
+Startup Probe
+👉 Used for slow-start apps
+Pod starts
+   ↓
+Readiness probe checks
+   ↓
+If OK → add to service
+   ↓
+Traffic starts flowing
+
+
+
+ 
+>In a pod how are you going to check the health , which  protocol use,what resoponce ,which req, has to be define or declare the container is healthy state?
+
+
+>>👉 Kubernetes uses probes defined in the container spec:
+Readiness Probe → “Can I send traffic?”
+Liveness Probe → “Is it still alive?”
+Startup Probe → “Has it started properly?”
+
+👉 Uses HTTP request
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+👉 TCP probe
+livenessProbe:
+  tcpSocket:
+    port: 3306
+  initialDelaySeconds: 5
+  periodSeconds: 10
+👉 Exec Probr
+livenessProbe:
+  exec:
+    command:
+      - cat
+      - /tmp/healthy
+Kubelet → runs probe
+        ↓
+Gets response
+        ↓
+If success → container healthy ✔
+If fail → take action ❌
+
+In a pod, health is checked using probes (HTTP, TCP, or Exec). Kubernetes sends a request and based on the response (status code, port open, or command success), it decides whether the container is healthy.”
+
+🧩 Step 1: Pod is scheduled
+🧩 Step 2: Kubelet starts monitoring probes
+readinessProbe:
+livenessProbe:
+startupProbe:
+🧩 Step 3: Kubelet executes probe
+Case 1: HTTP Probe
+Kubelet → sends HTTP GET → Pod IP:Port/path
+Case 2: TCP Probe
+Kubelet → tries TCP connection → Pod IP:Port
+Case 3: Exec Probe
+Kubelet → runs command inside container
+🧩 Step 4: Kubelet evaluates response
+🧩 Step 5: Kubelet updates Pod status
+👉 Kubelet → sends status to:
+Healthy → Ready = True
+Unhealthy → Ready = False
+
+Step 7: kube-proxy routes traffic
+🧩 Step 8: Liveness Probe action
+🧩 Step 9: Startup Probe (if present)
+Startup not complete → skip readiness/liveness
+Startup complete → normal probes start
+
+1. Pod created (API Server + Scheduler)
+2. Kubelet starts container
+3. Kubelet runs probe (HTTP/TCP/Exec)
+4. Kubelet checks response
+5. Kubelet updates API Server
+6. Endpoint Controller updates endpoints
+7. kube-proxy routes traffic only to healthy pods
+8. If liveness fails → container restart
+
+> what r the various protocols or paths we are using to check the health of the container?
+
