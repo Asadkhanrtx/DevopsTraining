@@ -1,0 +1,50 @@
+HELM
+
+
+
+A Chart is a Helm package. It contains all of the resource definitions necessary to run an application, tool, 
+or service inside of a Kubernetes cluster.Think of it like the Kubernetes equivalent of a Homebrew formula, an Apt dpkg, or a Yum RPM file.
+values file addline parametres and helmifying
+helper helm
+ >How to use the conditional statements and loops in a helm charts ,when u r planning for the release of the application?
+>> When releasing an application, you need flexibility:
+
+   Enable/disable components (DB, ingress, etc.)
+   Deploy multiple replicas or configs dynamically
+   Support dev / staging / prod differences
+ 
+ >How u r going to validate that whether there is a yaml file exists or not before u load the Yaml?
+
+ >>Using if with .Files.Get (Inside Helm)
+
+Helm allows checking files inside the chart.
+Example
+{{- if (.Files.Get "files/init.sql") }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-init
+data:
+  init.sql: |
+{{ .Files.Get "files/init.sql" | indent 4 }}
+{{- end }}
+
+Validate BEFORE Helm (Recommended)
+Shell check
+if [ -f values.yaml ]; then
+  helm upgrade app ./chart -f values.yaml
+else
+  echo "values.yaml not found"
+fi
+
+Helm Lint (Validation)
+helm lint ./chart
+YAML syntax
+Missing fields
+Template errors
+
+CLI             --dry-run --debug
+
+
+
+ >When u execute the command helm install...in which order all the helm files will be executed and which component is responsible for this?
