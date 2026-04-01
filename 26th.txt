@@ -1,0 +1,9 @@
+container -core level unerstanding
+image- what is image how it is genrated
+networking- ip addresss, dhcp, nat, denatting , subnetting of ip addresses to no of networks, default gateway.
+docker networking eth 0 docker 0 container  to container host based networking docker internal how it works
+then moved to kubernetes what is it deep dived into it
+then kubernetes networking
+api gateway 
+gateway api
+core dns and everything
