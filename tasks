@@ -32,3 +32,12 @@ there we monted the path to persistentVolumeClaim
 same thing we did using dynamic provisioning
 created storage class
 pvc configuration (usind in-tree driver)
+
+30th
+----
+helmiified the whole application of Duuniversity
+Created a tempelate chart
+values.yaml file
+tried to parameterised the required values
+installed helm in our control plane after cloning the repo 
+and then installed prometheus and grafana and the node port of the loadbalacer i configured it into the ha proxy 
