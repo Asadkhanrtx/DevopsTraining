@@ -275,3 +275,15 @@ Dynamic provisioning using NFS CSI driver successfully enables **automatic stora
 
 ---
 We practiced dynamic provising with one repo by making docker file and k8 manifests 
+
+from scrath we implemented an application for duinversity project which had only source code
+we built the image for it
+wrote the deployment files
+service files
+gateway files
+config maps and secrets
+http routes
+it had mysql database
+created pvc files and storage class
+i installed the csi driver and moutned the volumes to the nfs server and also the whole process with the help of sub dir or in tree kubernetes driven driver
+so observed the difference between btoh
