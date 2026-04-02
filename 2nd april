@@ -1,0 +1,157 @@
+>When u execute kubectl command how the kubectl authenticates the cluster ?
+
+    >> When you run a kubectl command, kubectl authenticates to the Kubernetes cluster through the API server,
+using credentials and configuration stored locally (usually in a kubeconfig file).
+Below is a clear, step‑by‑step explanation from command execution to authentication.
+kubectl → kubeconfig → API Server → Authentication → Authorization → Admission → Response
+Kubectl reads connection and authentication details from a kubeconfig file:
+~/.kube/config
+kubeconfig contains
+
+clusters:  # Where the cluster is and how to trust it
+users:     # How to authenticate
+contexts:  # Cluster + user + namespace
+Kubectl determines which cluster and user to use via the active context:
+kubectl config current-context
+kubectl sends the certificate with the API request
+API server validates:
+
+Certificate signature
+Expiry
+CN (Common Name) as username
+O (Organization) as groups
+Authentication inside the API server
+The API server authenticates the request using authentication modules, in order:
+
+Client certificate authentication
+Bearer token authentication
+OIDC authentication
+Webhook authentication (external IAM)
+
+
+>What is meant by context in kuubernetes how it plays a crucial role in authentication and authorization?
+
+    >> n Kubernetes, a context is a logical configuration entry that tells kubectl which cluster to connect to, which identity to use, and which namespace to operate in.
+It does not authenticate by itself, but it selects the authentication and authorization settings that will be used for every request.
+A context is a named reference in kubeconfig that binds together:
+
+Cluster (where to connect)
+User (how to authenticate)
+Namespace (default scope for requests)
+Context chooses the user → the user defines the authentication mechanism
+Authentication flow:
+
+kubectl reads current-context
+Context points to a user
+User entry defines:
+Client certificate OR
+Token OR
+Exec plugin (EKS/GKE/AKS)
+
+kubectl sends those credentials to the API server
+API server authenticates the request
+
+Kubernetes RBAC operates after authentication.
+Authorization depends on:
+
+Authenticated username
+Assigned groups
+Requested namespace
+Bound Roles / ClusterRoles
+All of these are influenced by the context.
+
+If dev-user has no RBAC access to kube-system, Kubernetes denies access.
+✅ Same user
+❌ Different namespace → different authorization outcome
+
+>What is meant by certificate , key in kubernetes and where we can find all the certificate in masternode..what is the path?
+    >>Kubernetes uses TLS (Transport Layer Security) for secure communication between all its components.
+🔐 Private Key (.key)
+Secret cryptographic file
+Used to prove identity
+Must be kept private
+
+Certificates are files
+file signed by a Certificate Authority (CA)
+Confirms who the component is
+Default location (kubeadm-based clusters)
+/etc/kubernetes/pki/
+/etc/kubernetes/pki/
+├── ca.crt
+├── ca.key
+├── apiserver.crt
+├── apiserver.key
+├── apiserver-kubelet-client.crt
+├── apiserver-kubelet-client.key
+├── front-proxy-ca.crt
+├── front-proxy-ca.key
+├── front-proxy-client.crt
+├── front-proxy-client.key
+└── sa.key
+└── sa.pub
+
+tcd certificates (separate folder)
+📁 /etc/kubernetes/pki/etcd/
+etc/kubernetes/pki/etcd/
+├── ca.crt
+├── ca.key
+├── server.crt
+├── server.key
+├── peer.crt
+├── peer.key
+├── healthcheck-client.crt
+└── healthcheck-client.key
+
+Certificates and keys in Kubernetes are TLS credentials used to securely authenticate and encrypt communication 
+between cluster components, and on a kubeadm master node they are primarily stored under /etc/kubernetes/pki/.
+
+
+>what is meant by OIDC and how we can give access to the cluster if it is on premises cluster how can we maintain the OIDC authentication?
+    >>OIDC (OpenID Connect) is an identity layer built on top of OAuth 2.0.
+It allows applications (like Kubernetes) to authenticate users via an external Identity Provider (IdP).
+👉 In simple words:
+OIDC lets Kubernetes trust an external login system (SSO) to verify users instead of using client certificates.\
+Kubernetes does not manage human users internally.
+OIDC enables Kubernetes to authenticate users via:
+
+Username
+Groups
+Email
+Claims from an external IdP
+User → Identity Provider → Token (JWT) → API Server → RBAC
+User logs in to IdP (browser / CLI plugin)
+IdP authenticates user (password, MFA, LDAP, etc.)
+IdP issues OIDC ID Token (JWT)
+kubectl sends token to Kubernetes API
+API server:
+
+Validates token signature
+Verifies issuer & audience
+API server extracts:
+username
+groups
+RBAC decides access
+OIDC in Kubernetes allows authentication via an external identity provider, and for an on‑prem cluster it is implemented by 
+    deploying an OIDC provider (like Keycloak), configuring the API server to trust it, and using RBAC to authorize users based on token claims.
+
+
+>IF i have 10 Software Dev how can we provide the kubernetes cluster access to everyone?
+   >>
+what is role role binding cluster cluster binding?
+
+    >>Role
+✅ Defines permissions within a single namespace
+A Role specifies what actions are allowed (get, create, delete, etc.) on which resources (pods, services, deployments) inside one namespace.
+📌 Namespace‑scoped
+RoleBinding
+✅ Grants a Role to a user/group/service account in a namespace
+A RoleBinding connects a Role to users or groups, giving them the permissions defined in the Role within that namespace.
+📌 Namespace‑scoped
+
+Defines permissions across the entire cluster
+A ClusterRole specifies permissions that apply cluster‑wide or to non‑namespaced resources like nodes, namespaces, PVs.
+ClusterRoleBinding
+✅ Grants a ClusterRole to a user/group/service account across the cluster
+
+A ClusterRoleBinding gives cluster‑wide access based on the ClusterRole.
+📌 Cluster‑scoped
