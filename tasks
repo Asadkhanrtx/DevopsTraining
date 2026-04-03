@@ -64,3 +64,16 @@ values.yaml file
 tried to parameterised the required values
 installed helm in our control plane after cloning the repo 
 and then installed prometheus and grafana and the node port of the loadbalacer i configured it into the ha proxy 
+
+3rd april
+---------
+create a group called as development, under development there are are multiple users
+user names are-
+murali
+mohan
+asad
+dhaninga
+ashutosh
+another testing group we have user called likhita and pavithra
+create these users and groups instead of giving permissions to particular user we have to assign permission to group.
+development group should have access for pods, deployment, tESTING GROUP SHOULD HAVE ACCESS for only services.
