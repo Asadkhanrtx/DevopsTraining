@@ -77,3 +77,190 @@ ashutosh
 another testing group we have user called likhita and pavithra
 create these users and groups instead of giving permissions to particular user we have to assign permission to group.
 development group should have access for pods, deployment, tESTING GROUP SHOULD HAVE ACCESS for only services.
+
+# ================================
+
+# 🔐 STEP 1: CREATE KEYS + CSR
+
+# ================================
+
+# Development users (group = development)
+
+openssl genrsa -out murali.key 2048 && openssl req -new -key murali.key -out murali.csr -subj "/CN=murali/O=development"
+openssl genrsa -out mohan.key 2048 && openssl req -new -key mohan.key -out mohan.csr -subj "/CN=mohan/O=development"
+openssl genrsa -out asad.key 2048 && openssl req -new -key asad.key -out asad.csr -subj "/CN=asad/O=development"
+openssl genrsa -out dhaninga.key 2048 && openssl req -new -key dhaninga.key -out dhaninga.csr -subj "/CN=dhaninga/O=development"
+openssl genrsa -out ashutosh.key 2048 && openssl req -new -key ashutosh.key -out ashutosh.csr -subj "/CN=ashutosh/O=development"
+
+# Testing users (group = testing)
+
+openssl genrsa -out likhita.key 2048 && openssl req -new -key likhita.key -out likhita.csr -subj "/CN=likhita/O=testing"
+openssl genrsa -out pavithra.key 2048 && openssl req -new -key pavithra.key -out pavithra.csr -subj "/CN=pavithra/O=testing"
+
+# ================================
+
+# 🔐 STEP 2: SIGN CERTIFICATES (CSR → CRT)
+
+# ================================
+
+# Signed using Kubernetes CA (VERY IMPORTANT)
+
+openssl x509 -req -in murali.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out murali.crt -days 365
+openssl x509 -req -in mohan.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out mohan.crt -days 365
+openssl x509 -req -in asad.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out asad.crt -days 365
+openssl x509 -req -in dhaninga.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out dhaninga.crt -days 365
+openssl x509 -req -in ashutosh.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out ashutosh.crt -days 365
+openssl x509 -req -in likhita.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out likhita.crt -days 365
+openssl x509 -req -in pavithra.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out pavithra.crt -days 365
+
+# ================================
+
+# 🔐 STEP 3: ADD USERS TO KUBECONFIG
+
+# ================================
+
+# Development users
+
+kubectl config set-credentials murali --client-certificate=/home/ubuntu/RBAC/murali.crt --client-key=/home/ubuntu/RBAC/murali.key
+kubectl config set-credentials mohan --client-certificate=/home/ubuntu/RBAC/mohan.crt --client-key=/home/ubuntu/RBAC/mohan.key
+kubectl config set-credentials asad --client-certificate=/home/ubuntu/RBAC/asad.crt --client-key=/home/ubuntu/RBAC/asad.key
+kubectl config set-credentials dhaninga --client-certificate=/home/ubuntu/RBAC/dhaninga.crt --client-key=/home/ubuntu/RBAC/dhaninga.key
+kubectl config set-credentials ashutosh --client-certificate=/home/ubuntu/RBAC/ashutosh.crt --client-key=/home/ubuntu/RBAC/ashutosh.key
+
+# Testing users
+
+kubectl config set-credentials likhita --client-certificate=/home/ubuntu/RBAC/likhita.crt --client-key=/home/ubuntu/RBAC/likhita.key
+kubectl config set-credentials pavithra --client-certificate=/home/ubuntu/RBAC/pavithra.crt --client-key=/home/ubuntu/RBAC/pavithra.key
+
+# ================================
+
+# 🔐 STEP 4: CREATE CONTEXTS (SWITCH USERS)
+
+# ================================
+
+kubectl config set-context murali-context --cluster=kubernetes --user=murali
+kubectl config set-context mohan-context --cluster=kubernetes --user=mohan
+kubectl config set-context asad-context --cluster=kubernetes --user=asad
+kubectl config set-context dhaninga-context --cluster=kubernetes --user=dhaninga
+kubectl config set-context ashutosh-context --cluster=kubernetes --user=ashutosh
+
+kubectl config set-context likhita-context --cluster=kubernetes --user=likhita
+kubectl config set-context pavithra-context --cluster=kubernetes --user=pavithra
+
+# ================================
+
+# 🔐 STEP 5: RBAC (GROUP BASED ACCESS)
+
+# ================================
+
+# -------- Development Role (pods + deployments) --------
+
+cat <<EOF > dev-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+name: development-role
+namespace: sales-test-ns
+rules:
+
+* apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+
+* apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+  EOF
+
+# -------- Bind Development GROUP --------
+
+cat <<EOF > dev-binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+name: development-binding
+namespace: sales-test-ns
+subjects:
+
+* kind: Group
+  name: development
+  apiGroup: rbac.authorization.k8s.io
+  roleRef:
+  kind: Role
+  name: development-role
+  apiGroup: rbac.authorization.k8s.io
+  EOF
+
+# -------- Testing Role (services only) --------
+
+cat <<EOF > test-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+name: testing-role
+namespace: sales-test-ns
+rules:
+
+* apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "watch"]
+  EOF
+
+# -------- Bind Testing GROUP --------
+
+cat <<EOF > test-binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+name: testing-binding
+namespace: sales-test-ns
+subjects:
+
+* kind: Group
+  name: testing
+  apiGroup: rbac.authorization.k8s.io
+  roleRef:
+  kind: Role
+  name: testing-role
+  apiGroup: rbac.authorization.k8s.io
+  EOF
+
+# ================================
+
+# 🔐 STEP 6: APPLY RBAC
+
+# ================================
+
+kubectl apply -f dev-role.yaml
+kubectl apply -f dev-binding.yaml
+kubectl apply -f test-role.yaml
+kubectl apply -f test-binding.yaml
+
+# ================================
+
+# 🔐 STEP 7: TEST ACCESS
+
+# ================================
+
+# Development user test
+
+kubectl config use-context asad-context
+kubectl get pods -n sales-test-ns          # ✔ allowed
+kubectl get deployments -n sales-test-ns   # ✔ allowed
+kubectl get services -n sales-test-ns      # ❌ denied
+
+# Testing user test
+
+kubectl config use-context likhita-context
+kubectl get services -n sales-test-ns      # ✔ allowed
+kubectl get pods -n sales-test-ns          # ❌ denied
+
+# ================================
+
+# 🔐 STEP 8: FINAL VERIFICATION
+
+# ================================
+
+kubectl auth can-i get pods --as=asad --as-group=development -n sales-test-ns
+kubectl auth can-i get services --as=likhita --as-group=testing -n sales-test-ns
+
