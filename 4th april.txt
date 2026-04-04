@@ -1,0 +1,29 @@
+Node Scheduling why it is needed 
+node selector
+nodeSelector is the simplest recommended form of node selection constraint. You can add the nodeSelector field to your Pod s
+pecification and specify the node labels you want the target node to have. Kubernetes only schedules the Pod onto nodes that have each
+of the labels you specify.
+Node labels
+Like many other Kubernetes objects, nodes have labels. You can attach labels manually. Kubernetes also populates a standard set of labels on all nodes in a cluster.
+Note:
+The value of these labels is cloud provider specific and is not guaranteed to be reliable. For example, the value of kubernetes.io/hostname may be the same as the 
+node name in some environments and a different value in other environments.
+
+Affinity and anti-affinity 
+nodeSelector is the simplest way to constrain Pods to nodes with specific labels. Affinity and anti-affinity expand the types of constraints you can define. 
+Some of the benefits of affinity and anti-affinity include:
+The affinity/anti-affinity language is more expressive. nodeSelector only selects nodes with all the specified labels. Affinity/anti-affinity gives you more 
+control over the selection logic.
+
+You can indicate that a rule is soft or preferred, so that the scheduler still schedules the Pod even if it can't find a matching node.
+You can constrain a Pod using labels on other Pods running on the node (or other topological domain), instead of just node labels, which 
+allows you to define rules for which Pods can be co-located on a node.
+
+Node Affinity tells Kubernetes which nodes a Pod SHOULD or MUST run on.
+
+1️⃣ RequiredDuringSchedulingIgnoredDuringExecution
+Hard rule
+Pod WILL NOT be scheduled unless the condition matches
+2️⃣ PreferredDuringSchedulingIgnoredDuringExecution
+Soft rule
+Kubernetes tries, but may ignore if no matching nodes exist
