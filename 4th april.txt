@@ -27,3 +27,44 @@ Pod WILL NOT be scheduled unless the condition matches
 2️⃣ PreferredDuringSchedulingIgnoredDuringExecution
 Soft rule
 Kubernetes tries, but may ignore if no matching nodes exist
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-affinity
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+  containers:
+  - name: nginx
+    image: nginx
+ex: Database pods on SSD nodes
+
+
+Node Anti‑Affinity tells Kubernetes where a Pod should NOT run.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-anti-affinity
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: NotIn
+            values:
+            - hdd
+  containers:
+  - name: nginx
+    image: nginx
+ex: Avoid scheduling on low‑memory nodes
+
