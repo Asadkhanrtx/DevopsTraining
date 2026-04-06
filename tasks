@@ -264,3 +264,15 @@ kubectl get pods -n sales-test-ns          # ❌ denied
 kubectl auth can-i get pods --as=asad --as-group=development -n sales-test-ns
 kubectl auth can-i get services --as=likhita --as-group=testing -n sales-test-ns
 
+6th april
+----------
+taints and tollerance
+implemented tolerance in my apllication
+tainted the noides
+
+admission controll
+---------------
+OPA 
+applied different rules and regulations 
+for my application 
+constraints and ConstraintTemplate
