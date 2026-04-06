@@ -1,0 +1,113 @@
+Taints and Tolerance
+Taints & Tolerations (Compact Notes)
+🔷 Basic Concept
+Taint → applied on node → blocks pods
+Toleration → applied on pod → allows pods
+Default: pods cannot go to tainted nodes
+
+👉 Memory:
+
+Taint = Node says NO
+Toleration = Pod says OK
+🔷 Add / Remove Taint
+kubectl taint nodes node1 key=value:NoSchedule
+kubectl taint nodes node1 key=value:NoSchedule-
+🔷 Effects
+NoSchedule → new pods blocked
+PreferNoSchedule → try to avoid
+NoExecute → evict running pods
+🔷 Basic Pod YAML
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "env"
+    operator: "Equal"
+    value: "dev"
+    effect: "NoSchedule"
+🔷 Operators (ONLY 2)
+Equal (default) → key + value must match
+Exists → only key must match (value ignored)
+🔷 Equal Example
+
+Node:
+
+kubectl taint nodes node1 env=dev:NoSchedule
+
+Pod:
+
+tolerations:
+- key: "env"
+  operator: "Equal"
+  value: "dev"
+  effect: "NoSchedule"
+
+✔️ Allowed
+❌ If value ≠ dev → blocked
+
+🔷 Exists Example
+tolerations:
+- key: "env"
+  operator: "Exists"
+  effect: "NoSchedule"
+
+✔️ Allowed even if value different
+
+🔷 Your Case
+
+Node:
+
+kubectl taint nodes node1 env=dev:NoSchedule
+
+Pod:
+
+tolerations:
+- key: "env"
+  operator: "Exists"
+  effect: "NoSchedule"
+
+✔️ Scheduled (value ignored)
+
+🔷 Matching Rules
+Key must match
+Effect must match
+Equal → value must match
+Exists → value ignored
+🔷 Defaults / Edge Cases
+No operator → Equal
+Exists → no value needed
+No effect → matches all effects
+Empty key + Exists → matches all taints
+🔷 NoExecute with Time
+tolerations:
+- key: "env"
+  operator: "Equal"
+  value: "dev"
+  effect: "NoExecute"
+  tolerationSeconds: 60
+
+→ stays 60 sec → evicted
+
+🔷 Multiple Taints Logic
+Kubernetes filters taints
+If any NoSchedule not tolerated → blocked
+If any NoExecute → evicted
+PreferNoSchedule → try to avoid
+🔷 Important Notes
+Toleration ≠ guarantee scheduling
+Scheduler still checks CPU/memory
+🔷 Real Use Case
+kubectl taint nodes gpu-node type=gpu:NoSchedule
+tolerations:
+- key: "type"
+  operator: "Equal"
+  value: "gpu"
+  effect: "NoSchedule"
+🔷 Difference (Important)
+Tolerations → Equal, Exists
+Node Affinity → In, NotIn, Exists, DoesNotExist
