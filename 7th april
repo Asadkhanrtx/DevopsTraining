@@ -1,0 +1,14 @@
+Setting Up kubernetes dashboards using Headlamp
+
+In-cluster | Headlamp
+In-cluster | Headlamp
+A common use case for any Kubernetes web UI is to deploy it in-cluster and
+helm repo add headlamp https://kubernetes-sigs.github.io/headlamp/
+helm install my-headlamp headlamp/headlamp --namespace kube-system
+kubectl get svc -n kube-system
+kubectl edit svc my-headlamp -n kube-system
+change service type to NodePort
+access it with public-ip:port no
+kubectl create token my-headlamp --namespace kube-system
+run this to get token
+ 
