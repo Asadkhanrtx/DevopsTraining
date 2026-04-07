@@ -56,3 +56,16 @@ If production breaks:
 Create a hotfix/* branch from main
 Fix the issue
 Merge back into main (and develop if used)
+
+
+CI/CD
+---------
+parametre pipe line:
+A parametric pipeline is a CI/CD pipeline that is driven by parameters (inputs) instead of being completely hard‑coded.
+A parametric pipeline lets you pass values (parameters) at runtime to control how the pipeline executes.
+Traditional pipelines are often rigid:
+One pipeline per environment
+One pipeline per branch
+One pipeline per use case
+
+When a Pull Request is created, the pipeline runs and uses a parameter (ENV) to decide how it behaves.
