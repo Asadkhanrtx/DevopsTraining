@@ -69,3 +69,12 @@ One pipeline per branch
 One pipeline per use case
 
 When a Pull Request is created, the pipeline runs and uses a parameter (ENV) to decide how it behaves.
+A trigger is an event that automatically starts a pipeline.
+In simple words:
+A trigger tells the CI/CD system when to run a pipeline.
+Without triggers, pipelines would only run manually.
+trigger will happen in 4 diff ways:
+push activity
+parametrized way
+pull request
+schedule based
