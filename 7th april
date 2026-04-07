@@ -12,3 +12,47 @@ access it with public-ip:port no
 kubectl create token my-headlamp --namespace kube-system
 run this to get token
  
+GIT
+git branching strategies
+git branch production rules:
+A branch production rule is a set of rules or policies that define how the production branch is used, protected, and updated in Git.
+In most teams, the production branch is called main or master, and it represents live, deployable code.
+Production branch rules answer this question:
+“What is allowed and not allowed on the production branch?”
+These rules are enforced to:
+Prevent accidental outages
+Maintain stability
+Ensure quality and security
+
+✅ All changes must come through:
+
+Pull Requests (PRs)
+Merge Requests (MRs)
+
+Before merging into production:
+
+✅ Code review is mandatory
+✅ Usually 1–2 approvals required
+
+Only allow merge if:
+
+✅ Build succeeds
+✅ Tests pass
+✅ Linting/security scans pass
+
+Production branch must always be in a releasable state
+This means:
+No broken code
+No half‑finished features
+Feature flags for incomplete work
+
+Limited Who Can Merge
+Only:
+Senior developers
+Tech leads
+DevOps engineers
+
+If production breaks:
+Create a hotfix/* branch from main
+Fix the issue
+Merge back into main (and develop if used)
