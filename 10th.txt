@@ -1,0 +1,29 @@
+What is SCA and what is SNYK?
+SCA
+  Software Composition Analysis (SCA) is a security and compliance technique used toidentify open-source and third-party 
+components within software applications. It detects known vulnerabilities, licensing risks,and outdated dependencies, enabling
+organizations to manage supply chain risk and maintain secure, compliant codebases.
+
+  SCA tools scan source code, build manifests, or binary artifacts to detect included open-source packages. They reference 
+vulnerability databases such as the National Vulnerability Database to flag known issues and track software licenses.
+The analysis typically runs during development and continuous integration pipelines for proactive remediation.
+
+SNYK
+Snyk is a security tool that helps developers find and fix vulnerabilities in their code, dependencies, containers, and infrastructure.
+Think of Snyk as:
+“A security scanner that checks your project and tells you what is unsafe and how to fix it.”
+Dependencies (SCA)
+Finds vulnerable libraries
+Example: outdated npm / Maven packages
+Code (SAST)
+Detects insecure coding practices
+Containers
+Scans Docker images for vulnerabilities
+Your Code → Snyk Scan → Vulnerability Report → Fix Suggestions
+
+Developer → GitHub → CI/CD Pipeline
+                         ↓
+                      Snyk Scan
+                         ↓
+                Block / Allow Build
+                
