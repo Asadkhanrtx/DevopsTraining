@@ -1,0 +1,4 @@
+What are the branching strategies we have? WHy we are using trunck based strategies? 
+when we are designing ci cd pipeline using gitOPS model why we have to use metric strtegies?how 
+what is argocd , how argocd is going to authenticate kubernetes cluster ?
+what is meant by push mechanism and pull mechanism ?
