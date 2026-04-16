@@ -1,2 +1,80 @@
 what is Argo rollout server ?How should we implement blue green deployment strategy using Argo rollout server
 and also how to integrate with the kubernetes cluster.
+
+>> Argo Rollouts → a Kubernetes progressive deployment controller
+Argo Rollouts Server → the UI + API component of Argo Rollouts
+Argo Rollouts Server is the web UI and API that lets you visualize, control,
+and manage progressive deployments handled by Argo Rollouts in Kubernetes.
+Problem with normal Kubernetes Deployment
+Kubernetes Deployment supports basic rolling update
+Pods are updated gradually
+But:
+No traffic control
+No metrics‑based decisions
+No automatic rollback based on errors
+Argo Rollouts introduces progressive delivery strategies, like:
+✅ Canary deployments
+✅ Blue‑Green deployments
+✅ Traffic shifting
+✅ Metric‑based promotion or rollback
+Argo Rollouts is:
+sA Kubernetes controller
+Implemented as a Custom Resource Definition (CRD)
+
+example of a canary:
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+spec:
+  strategy:
+    canary:
+      steps:
+      - setWeight: 20
+      - pause: {}
+      - setWeight: 50
+      - pause: {}
+
+Argo Rollouts Server is the API and web dashboard that allows teams to visualize and operate Argo Rollouts without using kubectl commands.
+Think of it as:
+A control panel
+A dashboard
+An API layer
+What the Rollouts Server Does
+The Rollouts Server provides:
+✅ UI visualization of rollouts
+✅ Real‑time traffic weights
+✅ Step‑by‑step rollout progress
+✅ Promote / abort / rollback buttons
+✅ Integration with metrics providers
+
+Git / CI Pipeline
+        |
+        v
+  Kubernetes Rollout CR
+        |
+        v
+ Argo Rollouts Controller
+        |
+        v
+ Argo Rollouts Server
+        |
+        v
+      UI / API
+
+What Problems the Rollouts Server Solves
+1. Visibility Problem
+2.Manual kubectl Dependency
+3. Collaboration
+
+
+Kubernetes Deployment alone:
+Cannot control live traffic cleanly
+No promotion/abort capability
+No UI visibility
+
+Argo Rollouts adds intelligence:
+Handles blue‑green logic
+Tracks versions
+Exposes promotion and rollback
+Integrates with traffic providers
+
+
