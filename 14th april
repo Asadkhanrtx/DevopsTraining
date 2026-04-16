@@ -1,4 +1,72 @@
 What are the branching strategies we have? WHy we are using trunck based strategies? 
 when we are designing ci cd pipeline using gitOPS model why we have to use metric strtegies?how 
-what is argocd , how argocd is going to authenticate kubernetes cluster ?
+
+>>what is argocd , how argocd is going to authenticate kubernetes cluster ?
+
+Argo CD is a GitOps Continuous Delivery (CD) tool for Kubernetes.
+Argo CD continuously watches a Git repository and makes sure the Kubernetes cluster exactly matches what is defined in Git
+Desired state lives in Git
+Actual state lives in Kubernetes
+Argo CD compares both and syncs them
+Pulls Kubernetes manifests from Git
+Applies them to the cluster
+Continuously compares Git vs Cluster
+Shows drift in UI/CLI
+Auto‑syncs or manual syncs
+Provides audit & rollback
+Argo CD authenticates to Kubernetes using Kubernetes ServiceAccounts and RBAC
+ It uses ServiceAccount authentication
+ServiceAccount is:
+An identity for applications (pods)
+Used by pods to talk to Kubernetes API
+
+Argo CD Pod Starts
+Argo CD runs in namespace argocd
+Each component has a ServiceAccount
+
+ServiceAccount Token Is Mounted
+
+Argo CD Calls Kubernetes API
+Example calls:
+
+Create Deployment
+Update Service
+Delete Pod
+
+Kubernetes API Server Validates Token
+
+ RBAC Decides What Argo CD Can Do
+
+
+Argo CD Pod
+   |
+   |-- ServiceAccount Token
+   |
+Kubernetes API Server
+   |
+   |-- RBAC Check
+   |
+Cluster Resources
+
+
 what is meant by push mechanism and pull mechanism ?
+
+Push vs Pull describes who initiates the action
+– the sender (push) or the receiver (pull)
+In a push mechanism, the source actively sends data or changes to the destination.
+🔹 Sender decides when and what to send
+
+In a pull mechanism, the destination actively asks for data or changes.
+🔹 Receiver decides when to fetch
+🔹 Sender only provides data when asked
+
+Argo CD checks Git periodically
+If Git changed → Argo CD pulls changes
+Applies changes to cluster
+
+✅ Git never pushes to cluster
+✅ Cluster state controlled by Argo CD
+
+
+
+
