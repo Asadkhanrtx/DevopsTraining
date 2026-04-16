@@ -78,3 +78,10 @@ Exposes promotion and rollback
 Integrates with traffic providers
 
 
+
+
+>> how argo cd is authenticating the cluster?
+>> In argocd namespace what is the role of service account ? and what are the rbac controlls created?
+>> How argocd is automatically syncing with ur github repo and how it is fetching the changes?
+>> how can we update the context through argocd ?
+
