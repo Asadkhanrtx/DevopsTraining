@@ -1,0 +1,6 @@
+domain purchase
+ci pipeline -GHCR, GitOps
+Manual/Approval/Deployment
+CD-Argocd
+Blue/Green Deployment- Argo ROllout Server
+Secret Manegment- Repo, Organisation,
